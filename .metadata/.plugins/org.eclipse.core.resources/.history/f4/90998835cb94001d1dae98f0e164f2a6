@@ -1,0 +1,78 @@
+package mapi;
+
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.sql.Connection;
+import java.sql.Driver;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+public class MaineMaven {
+	
+
+	static Connection connection;
+	
+	public static final String url = "jdbc:sqlserver://localhost:1433;databaseName=HotelDBMS;encrypt=true;trustServerCertificate=true";
+	public static final String user = "sa";
+	public static final String pass = "root";
+	private static final String sqlQueryToUpdate = "";
+	
+	public static void jsonApi() throws Throwable, InterruptedException {
+		
+		HttpClient client = HttpClient.newHttpClient();
+
+		System.out.println(" printing (API) information  ");
+
+		HttpRequest request = HttpRequest.newBuilder().uri(URI.create("http://universities.hipolabs.com")).build();
+
+		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+		System.out.println(response.body());
+		
+		
+	}
+
+	
+	static void connectToDataBase() throws Throwable, IllegalAccessException, ClassNotFoundException {
+
+		
+
+		try {
+
+			// Create a connection to the database
+
+			String serverName = "localhost";
+
+			String url = "jdbc:sqlserver://localhost:1433;databaseName=MavenDataBase;encrypt=true;trustServerCertificate=true";
+			String user = "sa";
+			String pass = "root";
+			Driver driver = (Driver) Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver").newInstance();
+			DriverManager.registerDriver(driver);
+
+			connection = DriverManager.getConnection(url, user, pass);
+
+			System.out.println("Successfully Connected to the database!" + "MavenDataBase");
+
+		} catch (SQLException e) {
+
+			System.out.println("Could not connect to the database " + e.getMessage());
+		}
+
+	}
+		
+		
+	
+	public static void main(String[] args) throws InterruptedException, Throwable  {
+		connectToDataBase();
+//		jsonApi();
+//		writJsonInDb();
+			
+		
+	}
+
+}

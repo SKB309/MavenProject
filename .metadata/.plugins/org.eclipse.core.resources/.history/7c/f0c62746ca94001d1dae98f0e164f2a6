@@ -1,0 +1,8 @@
+package mapi;
+
+public class Author {
+	
+	String website;
+	String name;
+
+}

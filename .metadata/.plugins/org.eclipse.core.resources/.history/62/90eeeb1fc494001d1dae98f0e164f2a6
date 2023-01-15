@@ -1,0 +1,61 @@
+package mapi;
+
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+
+public class MaineMaven {
+	
+	public static void jsonApi() throws Throwable, InterruptedException {
+		
+		HttpClient client = HttpClient.newHttpClient();
+
+		System.out.println(" printing (API) information  ");
+
+		HttpRequest request = HttpRequest.newBuilder().uri(URI.create("http://universities.hipolabs.com/")).build();
+
+		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+		System.out.println(response.body());
+		
+		
+	}
+
+	public static void writJsonInDb() throws Throwable, InterruptedException {
+		
+		HttpClient client = HttpClient.newHttpClient();
+		HttpRequest request = HttpRequest.newBuilder().uri(URI.create("https://ipinfo.io/161.185.160.39/geo")).build();
+
+		/* write json in file */
+		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+		System.out.println("API data saved in txt file name:'evaluationFileTxt'");
+		System.out.println("___________________________________________________");
+
+		String path = "C:\\Users\\user002\\eclipse-workspace\\saidevaluation\\" + "evaluationFileTxt.txt";
+
+		try (PrintWriter out = new PrintWriter(new FileWriter(path))) {
+			System.out.println("___________________________________");
+
+			out.write(response.body());
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+		
+		
+	
+	public static void main(String[] args) throws InterruptedException, Throwable  {
+
+		jsonApi();
+		writJsonInDb();
+		
+	}
+
+}
