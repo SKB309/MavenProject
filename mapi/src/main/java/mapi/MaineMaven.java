@@ -1,6 +1,6 @@
 package mapi;
 
-
+import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -12,31 +12,22 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Scanner;
 
-
-
-
-
+import com.google.gson.Gson;
 
 public class MaineMaven {
 
-	static String github;
-	static String example;
-	Author author;
+	Data data;
 
-	public static String getGithub() {
-		return github;
-	}
+	public static void mainMenue() {
 
-	public void setGithub(String github) {
-		this.github = github;
-	}
+		System.out.println("***********************************************************");
+		System.out.println(" 1- connect To Data Base ");
+		System.out.println(" 2- print json Api( ");
+		System.out.println(" 3- create Author Table ");
+		System.out.println(" 4- insert Into Table Author");
+		System.out.println(" 0- Exit ");
+		System.out.println("***********************************************************");
 
-	public static String getExample() {
-		return example;
-	}
-
-	public void setExample(String example) {
-		this.example = example;
 	}
 
 	public static void jsonApi() throws Throwable, InterruptedException {
@@ -49,7 +40,7 @@ public class MaineMaven {
 
 		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-		System.out.println(response.body());
+		System.out.printf(response.body());
 
 	}
 
@@ -88,8 +79,8 @@ public class MaineMaven {
 
 		try (Connection conn = DriverManager.getConnection(url, user, pass); Statement stmt = conn.createStatement();) {
 			String sql = "CREATE TABLE Author " + "( Id int PRIMARY KEY IDENTITY(1,1) ,"
-					+ " website VARCHAR(50) not null," + " name VARCHAR(50)," + " github VARCHAR(50) ,"
-					+ " example VARCHAR(50) ,)";
+					+ " website VARCHAR(500) not null," + " name VARCHAR(500)," + " github VARCHAR(500) ,"
+					+ " example VARCHAR(500) ,)";
 
 			stmt.executeUpdate(sql);
 			System.out.println("Created table in given database...");
@@ -98,44 +89,38 @@ public class MaineMaven {
 		}
 	}
 
-	public static void insertIntoTableHotels() {
+	public static void insertIntoTableAuthor() throws Throwable, InterruptedException {
 
 		String url = "jdbc:sqlserver://localhost:1433;databaseName=MavenDataBase;encrypt=true;trustServerCertificate=true";
 		String user = "sa";
 		String pass = "root";
 
 		Scanner scanner = new Scanner(System.in);
-		
-HttpRequest request2 = HttpRequest.newBuilder()
-				
-				
-				
-				.uri(URI.create("http://universities.hipolabs.com" )).build();
+
+		HttpRequest request2 = HttpRequest.newBuilder()
+
+				.uri(URI.create("http://universities.hipolabs.com")).build();
 
 		HttpResponse<String> response2;
-		
 
-//		System.out.println("Enter Hotel Id ");
-//		Integer hotelId = scanner.nextInt();
+		HttpClient client = HttpClient.newHttpClient();
 
-		System.out.println("Enter Author website");
-		String getWebsite = scanner.next();
+		System.out.println(" printing (API) information  ");
 
-		System.out.println("Enter Author name" );
-		String getName = scanner.next();
+		HttpRequest request = HttpRequest.newBuilder().uri(URI.create("http://universities.hipolabs.com")).build();
 
-		System.out.println("Enter github");
-		String github = scanner.next();
+		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-		System.out.println("Enter example");
-		String getExample = scanner.next();
+		System.out.println(response.body());
+		Gson gson = new Gson();
+		Data data = new Gson().fromJson(response.body(), Data.class);
+		System.out.println(data);
 
-		String sql = "Insert into Author values( '" + getWebsite + "','" + getName + "','" + github + "','" + getExample + "')";
+		String sql = "Insert into Author values( '" + data.getAuthor().getWebsite() + "','" + data.getAuthor().getName()
+				+ "','" + data.getGithub() + "','" + data.getExample() + "')";
 
-		// Connection class object
 		Connection con;
 
-		// Try block to check for exceptions
 		try {
 
 			Driver driver = (Driver) Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver").newInstance();
@@ -159,44 +144,69 @@ HttpRequest request2 = HttpRequest.newBuilder()
 			con.close();
 		}
 
-		// Catch block to handle exceptions
+//		 Catch block to handle exceptions
 		catch (Exception ex) {
 			// Display message when exceptions occurs
 			System.err.println(ex);
 		}
+	}
+
+	public static void toExit() {
+
+		System.out.println("***********");
+		System.out.println("Good Bay");
+		System.out.println("***********");
 
 	}
 
-	
-	
-//	Test
-	public static void insertIntoTableHotels1() throws Throwable, InterruptedException {
-		
-//			int num = 0;
+	public static void byDefault() {
 
-//			for (int i = 0; i < num; i++) {
-				System.out.println("_____________________________________________");
+		System.out.println("plase Enter correct choise");
 
-				System.out.println("The Website Is : " + Author.getWebsite());
-				System.out.println("The Name Is : " + Author.getName());
-				System.out.println("The Github Is : " + getGithub());
-				System.out.println("The Example Is : " + getExample());
-
-				System.out.println("_____________________________________________");
-
-			}
-
-//		}
-	
+	}
 
 	public static void main(String[] args) throws InterruptedException, Throwable {
 
-		connectToDataBase();
-//		jsonApi();
-//		createAuthorTable();
-		insertIntoTableHotels();
-		insertIntoTableHotels1();
+		Scanner sc = new Scanner(System.in);
 
+		boolean exit = true;
+
+		do {
+
+			mainMenue();
+			int option = sc.nextInt();
+
+			switch (option) {
+
+			case 1:
+				connectToDataBase();
+				break;
+
+			case 2:
+				jsonApi();
+				break;
+
+			case 3:
+				createAuthorTable();
+
+				break;
+
+			case 4:
+				insertIntoTableAuthor();
+
+				break;
+
+			case 0:
+				toExit();
+				exit = false;
+
+				break;
+
+			default:
+
+				byDefault();
+			}
+
+		} while (exit);
 	}
-
 }

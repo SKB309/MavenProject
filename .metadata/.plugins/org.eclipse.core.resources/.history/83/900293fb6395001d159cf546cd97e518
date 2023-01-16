@@ -1,0 +1,43 @@
+package mapi;
+
+public class Author {
+	
+	private static String website;
+	private static String name;
+	
+	private static String github;
+	
+	
+	public static String getGithub() {
+		return github;
+	}
+	public static void setGithub(String github) {
+		Author.github = github;
+	}
+	public static String getExample() {
+		return example;
+	}
+	public static void setExample(String example) {
+		Author.example = example;
+	}
+	private static String example;
+	
+	
+	
+	public static String getWebsite() {
+		return website;
+	}
+	public void setWebsite(String website) {
+		this.website = website;
+	}
+	public static String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	
+	
+	
+}

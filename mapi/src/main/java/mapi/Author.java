@@ -2,20 +2,17 @@ package mapi;
 
 public class Author {
 	
-	private static String website;
-	private static String name;
+	private  String website;
+	private  String name;
 	
 	
-	
-	
-	
-	public static String getWebsite() {
+	public  String getWebsite() {
 		return website;
 	}
 	public void setWebsite(String website) {
 		this.website = website;
 	}
-	public static String getName() {
+	public  String getName() {
 		return name;
 	}
 	public void setName(String name) {

@@ -1,0 +1,10 @@
+package mapi;
+
+public class Gson {
+
+	public Author[] fromJson(String body, Class<Data> class1) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}
